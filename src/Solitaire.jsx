@@ -1,4 +1,4 @@
-import { DndProvider } from 'react-dnd'
+import { DndProvider, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Card from 'src/components/Card'
 
@@ -17,14 +17,52 @@ const Solitaire = () => {
     spades: '♤'
   }
 
+  const layoutStyle = {
+    display: 'grid',
+    gridTemplateColumns: '105px 105px 105px 105px 105px 105px 105px 105px'
+  }
+
+  const partialDeck = [...Array(13).keys()].map(i => i + 1)
+
   return (
     <div>
       <DndProvider backend={HTML5Backend}>
-        <Card value={2} suit={suits.hearts} color='red' tempSuit={tempSuits.hearts} />
-        <Card value={3} suit={suits.diamonds} color='red' tempSuit={tempSuits.diamonds} />
-        <Card value={4} suit={suits.clubs} color='black' tempSuit={tempSuits.clubs} />
-        <Card value={5} suit={suits.spades} color='black' tempSuit={tempSuits.spades} />
+      <div style={layoutStyle}>
+        {partialDeck.map(card => <Card key={card} value={card} suit={suits.hearts} color='red' tempSuit={tempSuits.hearts} />)}
+        <Card value={12} suit={suits.clubs} color='black' tempSuit={tempSuits.clubs} />
+        <Card value={12} suit={suits.clubs} color='black' tempSuit={tempSuits.clubs} />
+        <Card value={12} suit={suits.clubs} color='black' tempSuit={tempSuits.clubs} />
+        <Card value={5} suit={suits.hearts} color='red' tempSuit={tempSuits.hearts} />
+        <Card value={5} suit={suits.diamonds} color='red' tempSuit={tempSuits.diamonds} />
+        <Card value={12} suit={suits.clubs} color='black' tempSuit={tempSuits.clubs} />
+        <Card value={13} suit={suits.spades} color='black' tempSuit={tempSuits.spades} />
+        <Card value={2} suit={suits.spades} color='black' tempSuit={tempSuits.spades} />
+        <Dropzone />
+       </div>
       </DndProvider>
+    </div>
+  )
+}
+
+const Dropzone = () => {
+  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+    accept: 'CARD',
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
+  }))
+
+  const dropzoneStyle = {
+    backgroundColor: isOver ? 'red' : 'grey',
+    width: '100px',
+    height: '150px',
+    margin: '5px'
+  }
+
+  return (
+    <div ref={drop} role={'dropzone'} style={dropzoneStyle}>
+      {canDrop ? 'Release' : 'Drag here'}
     </div>
   )
 }
