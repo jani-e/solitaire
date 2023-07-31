@@ -3,19 +3,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import Card from 'src/components/Card'
 
 const Solitaire = () => {
-  const suits = {
-    hearts: '♥',
-    diamonds: '♦',
-    clubs: '♣',
-    spades: '♠'
-  }
-
-  const tempSuits = {
-    hearts: '♡',
-    diamonds: '♢',
-    clubs: '♧',
-    spades: '♤'
-  }
 
   const layoutStyle = {
     display: 'grid',
@@ -28,15 +15,15 @@ const Solitaire = () => {
     <div>
       <DndProvider backend={HTML5Backend}>
       <div style={layoutStyle}>
-        {partialDeck.map(card => <Card key={card} value={card} suit={suits.hearts} color='red' tempSuit={tempSuits.hearts} />)}
-        <Card value={12} suit={suits.clubs} color='black' tempSuit={tempSuits.clubs} />
-        <Card value={12} suit={suits.clubs} color='black' tempSuit={tempSuits.clubs} />
-        <Card value={12} suit={suits.clubs} color='black' tempSuit={tempSuits.clubs} />
-        <Card value={5} suit={suits.hearts} color='red' tempSuit={tempSuits.hearts} />
-        <Card value={5} suit={suits.diamonds} color='red' tempSuit={tempSuits.diamonds} />
-        <Card value={12} suit={suits.clubs} color='black' tempSuit={tempSuits.clubs} />
-        <Card value={13} suit={suits.spades} color='black' tempSuit={tempSuits.spades} />
-        <Card value={2} suit={suits.spades} color='black' tempSuit={tempSuits.spades} />
+        {partialDeck.map(card => <Card key={card} value={card} suit='hearts' />)}
+        <Card value={12} suit='clubs' />
+        <Card value={12} suit='clubs' />
+        <Card value={12} suit='clubs' />
+        <Card value={5} suit='hearts' />
+        <Card value={5} suit='diamonds' />
+        <Card value={12} suit='clubs' />
+        <Card value={13} suit='spades' />
+        <Card value={2} suit='spades' />
         <Dropzone />
        </div>
       </DndProvider>
