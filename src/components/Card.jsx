@@ -33,7 +33,7 @@ const Card = ({ value, suit }) => {
     }
   }
 
-  const cardSuite = () => {
+  const cardSuit = () => {
     switch (suit) {
       case 'hearts': return {small: '\u2665', large: '\u2661', color: 'red'}
       case 'diamonds': return {small: '\u2666', large: '\u2662', color: 'red'}
@@ -56,11 +56,11 @@ const Card = ({ value, suit }) => {
     <div ref={drag} style={cardStyle} onClick={() => setRevealed(!revealed)}>
       <svg width={100} height={150} >
         <rect width='100%' height='150%' fill="white" />
-        <text x={80} y={20} fill={cardSuite().color}>{cardValue()}</text>
-        <text x={5} y={140} fill={cardSuite().color}>{cardValue()}</text>
-        <text x={5} y={20} fill={cardSuite().color}>{cardSuite().small}</text>
-        <text x={80} y={140} fill={cardSuite().color}>{cardSuite().small}</text>
-        <text x={12} y={105} fill={cardSuite().color} fontSize={77}>{cardSuite().large}</text>
+        <text x={80} y={20} fill={cardSuit().color}>{cardValue()}</text>
+        <text x={5} y={140} fill={cardSuit().color}>{cardValue()}</text>
+        <text x={5} y={20} fill={cardSuit().color}>{cardSuit().small}</text>
+        <text x={80} y={140} fill={cardSuit().color}>{cardSuit().small}</text>
+        <text x={12} y={105} fill={cardSuit().color} fontSize={77}>{cardSuit().large}</text>
       </svg>
     </div>
   )
