@@ -1,6 +1,7 @@
 import { DndProvider, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Card from 'src/components/Card'
+import Stack from 'src/components/Stack'
 
 const Solitaire = () => {
 
@@ -9,22 +10,25 @@ const Solitaire = () => {
     gridTemplateColumns: '105px 105px 105px 105px 105px 105px 105px 105px'
   }
 
-  const partialDeck = [...Array(13).keys()].map(i => i + 1)
+  const heartsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'hearts' }))
+  const diamondsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'diamonds' }))
+  const clubsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'clubs' }))
+  const spadesDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'spades' }))
 
   return (
     <div>
       <DndProvider backend={HTML5Backend}>
       <div style={layoutStyle}>
-        {partialDeck.map(card => <Card key={card} value={card} suit='hearts' />)}
-        <Card value={12} suit='clubs' />
-        <Card value={12} suit='clubs' />
-        <Card value={12} suit='clubs' />
-        <Card value={5} suit='hearts' />
-        <Card value={5} suit='diamonds' />
-        <Card value={12} suit='clubs' />
-        <Card value={13} suit='spades' />
-        <Card value={2} suit='spades' />
+        {heartsDeck.map(card => <Card key={card.value} value={card.value} suit={card.suit} />)}
+        <div></div>
+        {diamondsDeck.map(card => <Card key={card.value} value={card.value} suit={card.suit} />)}
+        {clubsDeck.map(card => <Card key={card.value} value={card.value} suit={card.suit} />)}
+        {spadesDeck.map(card => <Card key={card.value} value={card.value} suit={card.suit} />)}
         <Dropzone />
+        <Stack cards={heartsDeck} />
+        <Stack cards={diamondsDeck} />
+        <Stack cards={clubsDeck} />
+        <Stack cards={spadesDeck} />
        </div>
       </DndProvider>
     </div>
