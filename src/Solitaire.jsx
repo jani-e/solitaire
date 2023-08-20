@@ -1,35 +1,82 @@
+import { useState } from 'react'
 import { DndProvider, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Card from 'src/components/Card'
 import Stack from 'src/components/Stack'
 
 const Solitaire = () => {
+  const heartsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'hearts' }))
+  const diamondsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'diamonds' }))
+  const clubsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'clubs' }))
+  const spadesDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'spades' }))
+
+  const playDeck = heartsDeck
+    .concat(diamondsDeck, clubsDeck, spadesDeck)
+    .map((card, index) => ({ id: index + 1, ...card }))
+
+  const tempPlayDeck = {
+    stack: playDeck,
+    flipped: [],
+    hearts: [],
+    diamonds: [],
+    clubs: [],
+    spades: [],
+    stackOne: [],
+    stackTwo: [],
+    stackThree: [],
+    stackFour: [],
+    stackFive: [],
+    stackSix: [],
+    stackSeven: []
+  }
+
+  const [deck, setDeck] = useState(tempPlayDeck)
+  const [id, setId] = useState('')
+  const [destination, setDestination] = useState('stackOne')
+
 
   const layoutStyle = {
     display: 'grid',
     gridTemplateColumns: '105px 105px 105px 105px 105px 105px 105px 105px'
   }
 
-  const heartsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'hearts' }))
-  const diamondsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'diamonds' }))
-  const clubsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'clubs' }))
-  const spadesDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'spades' }))
+  const moveCard = (id, destination) => {
+    const destinationProp = destination
+    if (!deck.stack.find(card => card.id === id)) {
+      console.log('not found')
+      return
+    }
+    setDeck({
+      ...deck,
+      [destinationProp]: deck[destinationProp].concat(deck.stack.find(card => card.id === id)),
+      stack: deck.stack.filter(card => card.id !== id)
+    })
+  }
+
+  console.log(deck)
 
   return (
     <div>
+      <button onClick={() => (moveCard(id, destination), setId(''))}>move card id:</button>
+      <input value={id} onChange={({ target: { value: id } }) => setId(Number(id))} />
+      <select value={destination} onChange={({ target: { value: destination } }) => setDestination(destination)}>
+        <option value='stackOne'>stackOne</option>
+        <option value='stackTwo'>stackTwo</option>
+      </select>
       <DndProvider backend={HTML5Backend}>
-      <div style={layoutStyle}>
-        {heartsDeck.map(card => <Card key={card.value} value={card.value} suit={card.suit} />)}
-        <div></div>
-        {diamondsDeck.map(card => <Card key={card.value} value={card.value} suit={card.suit} />)}
-        {clubsDeck.map(card => <Card key={card.value} value={card.value} suit={card.suit} />)}
-        {spadesDeck.map(card => <Card key={card.value} value={card.value} suit={card.suit} />)}
-        <Dropzone />
-        <Stack cards={heartsDeck} />
-        <Stack cards={diamondsDeck} />
-        <Stack cards={clubsDeck} />
-        <Stack cards={spadesDeck} />
-       </div>
+        <div style={layoutStyle}>
+          <Dropzone />
+          <Stack cards={deck.stackOne} />
+          <Stack cards={deck.stackTwo} />
+          <Stack cards={deck.stackThree} />
+          <Stack cards={deck.stackFour} />
+          <Stack cards={deck.stackFive} />
+          <Stack cards={deck.stackSix} />
+          <Stack cards={deck.stackSeven} />
+        </div>
+        <div style={layoutStyle}>
+          {deck.stack.map(card => <Card key={card.id} value={card.value} suit={card.suit} />)}
+        </div>
       </DndProvider>
     </div>
   )
@@ -57,22 +104,5 @@ const Dropzone = () => {
     </div>
   )
 }
-
-/*
-todo / things to consider
-- can svg be dragged and moved like in solitaire game?
-  - Card that is a div and contains svg can be dragged --> react DnD
-  - cards should have fixed places
-- card styling
-  - hidden card / reveal card -> useState?
-  - card colors and 'tempSuit' added in suits
-  - value display logic for 1 ace, 11 jack, 12 queen, 13 king
-- game code logic
-  - tracking where cards are
-  - double click card logic
-  - deck
-- move card svg/image to assets or components? --> moved to components 
-- moved game to its own repository
-*/
 
 export default Solitaire
