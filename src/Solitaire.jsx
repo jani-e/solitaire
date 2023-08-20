@@ -3,6 +3,8 @@ import { DndProvider, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Card from 'src/components/Card'
 import Stack from 'src/components/Stack'
+import Deck from 'src/components/Deck'
+import Turned from 'src/components/Turned'
 
 const Solitaire = () => {
   const heartsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'hearts' }))
@@ -14,9 +16,9 @@ const Solitaire = () => {
     .concat(diamondsDeck, clubsDeck, spadesDeck)
     .map((card, index) => ({ id: index + 1, ...card }))
 
-  const tempPlayDeck = {
+  const initialDeck = {
     stack: playDeck,
-    flipped: [],
+    turned: [],
     hearts: [],
     diamonds: [],
     clubs: [],
@@ -30,14 +32,14 @@ const Solitaire = () => {
     stackSeven: []
   }
 
-  const [deck, setDeck] = useState(tempPlayDeck)
+  const [deck, setDeck] = useState(initialDeck)
   const [id, setId] = useState('')
-  const [destination, setDestination] = useState('stackOne')
+  const [destination, setDestination] = useState('turned')
 
 
   const layoutStyle = {
     display: 'grid',
-    gridTemplateColumns: '105px 105px 105px 105px 105px 105px 105px 105px'
+    gridTemplateColumns: '105px 105px 105px 105px 105px 105px 105px'
   }
 
   const moveCard = (id, destination) => {
@@ -60,11 +62,18 @@ const Solitaire = () => {
       <button onClick={() => (moveCard(id, destination), setId(''))}>move card id:</button>
       <input value={id} onChange={({ target: { value: id } }) => setId(Number(id))} />
       <select value={destination} onChange={({ target: { value: destination } }) => setDestination(destination)}>
+        <option value='turned'>turned</option>
         <option value='stackOne'>stackOne</option>
         <option value='stackTwo'>stackTwo</option>
       </select>
       <DndProvider backend={HTML5Backend}>
         <div style={layoutStyle}>
+          <Deck cards={deck.stack} />
+          <Turned cards={deck.turned} />
+          <div></div>
+          <Dropzone />
+          <Dropzone />
+          <Dropzone />
           <Dropzone />
           <Stack cards={deck.stackOne} />
           <Stack cards={deck.stackTwo} />
