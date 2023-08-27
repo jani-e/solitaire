@@ -5,6 +5,7 @@ import Card from 'src/components/Card'
 import Stack from 'src/components/Stack'
 import Deck from 'src/components/Deck'
 import Turned from 'src/components/Turned'
+import lodash from 'lodash'
 
 const Solitaire = () => {
   const heartsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'hearts' }))
@@ -12,24 +13,26 @@ const Solitaire = () => {
   const clubsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'clubs' }))
   const spadesDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'spades' }))
 
-  const playDeck = heartsDeck
-    .concat(diamondsDeck, clubsDeck, spadesDeck)
-    .map((card, index) => ({ id: index + 1, ...card }))
+  const playDeck = lodash.shuffle(
+    heartsDeck
+      .concat(diamondsDeck, clubsDeck, spadesDeck)
+      .map((card, index) => ({ id: index + 1, ...card }))
+  )
 
   const initialDeck = {
-    stack: playDeck,
+    stack: playDeck.slice(28, playDeck.length),
     turned: [],
     hearts: [],
     diamonds: [],
     clubs: [],
     spades: [],
-    stackOne: [],
-    stackTwo: [],
-    stackThree: [],
-    stackFour: [],
-    stackFive: [],
-    stackSix: [],
-    stackSeven: []
+    stackOne: playDeck.slice(0, 1),
+    stackTwo: playDeck.slice(1, 3),
+    stackThree: playDeck.slice(3, 6),
+    stackFour: playDeck.slice(6, 10),
+    stackFive: playDeck.slice(10, 15),
+    stackSix: playDeck.slice(15, 21),
+    stackSeven: playDeck.slice(21, 28)
   }
 
   const [deck, setDeck] = useState(initialDeck)
@@ -55,6 +58,14 @@ const Solitaire = () => {
     })
   }
 
+  const resetDeck = () => {
+    setDeck({
+      ...deck,
+      stack: deck.turned,
+      turned: []
+    })
+  }
+
   console.log(deck)
 
   return (
@@ -68,7 +79,7 @@ const Solitaire = () => {
       </select>
       <DndProvider backend={HTML5Backend}>
         <div style={layoutStyle}>
-          <Deck cards={deck.stack} />
+          <Deck moveCard={moveCard} resetDeck={resetDeck} cards={deck.stack} />
           <Turned cards={deck.turned} />
           <div></div>
           <Dropzone />
@@ -83,9 +94,9 @@ const Solitaire = () => {
           <Stack cards={deck.stackSix} />
           <Stack cards={deck.stackSeven} />
         </div>
-        <div style={layoutStyle}>
+        {/* <div style={layoutStyle}>
           {deck.stack.map(card => <Card key={card.id} value={card.value} suit={card.suit} />)}
-        </div>
+        </div> */}
       </DndProvider>
     </div>
   )
