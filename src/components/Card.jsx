@@ -35,16 +35,18 @@ const Card = ({ value, suit }) => {
 
   const cardSuit = () => {
     switch (suit) {
-      case 'hearts': return {small: '\u2665', large: '\u2661', color: 'red'}
-      case 'diamonds': return {small: '\u2666', large: '\u2662', color: 'red'}
-      case 'clubs': return {small: '\u2663', large: '\u2667', color: 'black'}
-      case 'spades': return {small: '\u2660', large: '\u2664', color: 'black'}
+      case 'hearts': return { small: '\u2665', large: '\u2661', color: 'red' }
+      case 'diamonds': return { small: '\u2666', large: '\u2662', color: 'red' }
+      case 'clubs': return { small: '\u2663', large: '\u2667', color: 'black' }
+      case 'spades': return { small: '\u2660', large: '\u2664', color: 'black' }
     }
   }
 
   if (!revealed) {
     return (
-      <div ref={drag} style={cardStyle} onClick={() => setRevealed(!revealed)}>
+      <div ref={drag} style={cardStyle}
+      // onClick={() => setRevealed(!revealed)}
+      >
         <svg width={100} height={150} >
           <rect width='100%' height='150%' fill="lightgrey" />
         </svg>
@@ -53,7 +55,9 @@ const Card = ({ value, suit }) => {
   }
 
   return (
-    <div ref={drag} style={cardStyle} onClick={() => setRevealed(!revealed)}>
+    <div ref={drag} style={cardStyle}
+    // onClick={() => setRevealed(!revealed)}
+    >
       <svg width={100} height={150} >
         <rect width='100%' height='150%' fill="white" />
         <text x={80} y={20} fill={cardSuit().color}>{cardValue()}</text>
