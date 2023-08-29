@@ -16,7 +16,9 @@ const Deck = ({ cards, moveCard, resetDeck}) => {
 }
 
 Deck.propTypes = {
-  cards: PropTypes.array
+  cards: PropTypes.array,
+  moveCard: PropTypes.func,
+  resetDeck: PropTypes.func
 }
 
 export default Deck
