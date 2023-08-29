@@ -6,6 +6,7 @@ import Stack from 'src/components/Stack'
 import Deck from 'src/components/Deck'
 import Turned from 'src/components/Turned'
 import lodash from 'lodash'
+import SuitStack from './components/SuitStack'
 
 const Solitaire = () => {
   const heartsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'hearts' }))
@@ -22,10 +23,10 @@ const Solitaire = () => {
   const initialDeck = {
     stack: playDeck.slice(28, playDeck.length),
     turned: [],
-    hearts: [],
-    diamonds: [],
-    clubs: [],
-    spades: [],
+    suitStackOne: [],
+    suitStackTwo: [],
+    suitStackThree: [],
+    suitStackFour: [],
     stackOne: playDeck.slice(0, 1),
     stackTwo: playDeck.slice(1, 3),
     stackThree: playDeck.slice(3, 6),
@@ -37,7 +38,7 @@ const Solitaire = () => {
 
   const [deck, setDeck] = useState(initialDeck)
   const [id, setId] = useState('')
-  const [destination, setDestination] = useState('turned')
+  const [destination, setDestination] = useState('suitStackOne')
 
 
   const layoutStyle = {
@@ -73,7 +74,7 @@ const Solitaire = () => {
       <button onClick={() => (moveCard(id, destination), setId(''))}>move card id:</button>
       <input value={id} onChange={({ target: { value: id } }) => setId(Number(id))} />
       <select value={destination} onChange={({ target: { value: destination } }) => setDestination(destination)}>
-        <option value='turned'>turned</option>
+        <option value='suitStackOne'>turned</option>
         <option value='stackOne'>stackOne</option>
         <option value='stackTwo'>stackTwo</option>
       </select>
@@ -82,10 +83,10 @@ const Solitaire = () => {
           <Deck moveCard={moveCard} resetDeck={resetDeck} cards={deck.stack} />
           <Turned cards={deck.turned} />
           <div></div>
-          <Dropzone />
-          <Dropzone />
-          <Dropzone />
-          <Dropzone />
+          <SuitStack cards={deck.suitStackOne} />
+          <SuitStack cards={deck.suitStackTwo} />
+          <SuitStack cards={deck.suitStackThree} />
+          <SuitStack cards={deck.suitStackFour} />
           <Stack cards={deck.stackOne} />
           <Stack cards={deck.stackTwo} />
           <Stack cards={deck.stackThree} />
