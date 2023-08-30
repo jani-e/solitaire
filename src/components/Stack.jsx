@@ -17,7 +17,7 @@ const Stack = ({ cards }) => {
 
   return (
     <div>
-      {<Card value={parent.value} suit={parent.suit} />}
+      {<Card value={parent.value} suit={parent.suit} revealedStatus={parent.revealed} />}
       {!!children.length && <div style={childrenStyle}>{<Stack cards={children} />}</div>}
     </div>
   )

@@ -17,8 +17,18 @@ const Solitaire = () => {
   const playDeck = lodash.shuffle(
     heartsDeck
       .concat(diamondsDeck, clubsDeck, spadesDeck)
-      .map((card, index) => ({ id: index + 1, ...card }))
+      .map((card, index) => ({ id: index + 1, revealed: true, ...card }))
   )
+
+  const hideCards = ( cards ) => {
+    const unRevealedCards = cards.map(card => ({...card, revealed: !card.revealed }))
+    const lastCard = unRevealedCards.pop()
+    const lastCardRevealed = {
+      ...lastCard,
+      revealed: true
+    }
+    return unRevealedCards.concat(lastCardRevealed)
+  }
 
   const initialDeck = {
     stack: playDeck.slice(28, playDeck.length),
@@ -28,12 +38,12 @@ const Solitaire = () => {
     suitStackThree: [],
     suitStackFour: [],
     stackOne: playDeck.slice(0, 1),
-    stackTwo: playDeck.slice(1, 3),
-    stackThree: playDeck.slice(3, 6),
-    stackFour: playDeck.slice(6, 10),
-    stackFive: playDeck.slice(10, 15),
-    stackSix: playDeck.slice(15, 21),
-    stackSeven: playDeck.slice(21, 28)
+    stackTwo: hideCards(playDeck.slice(1, 3)),
+    stackThree: hideCards(playDeck.slice(3, 6)),
+    stackFour: hideCards(playDeck.slice(6, 10)),
+    stackFive: hideCards(playDeck.slice(10, 15)),
+    stackSix: hideCards(playDeck.slice(15, 21)),
+    stackSeven: hideCards(playDeck.slice(21, 28))
   }
 
   const [deck, setDeck] = useState(initialDeck)

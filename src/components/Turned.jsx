@@ -10,7 +10,7 @@ const Turned = ({ cards }) => {
   const last = cards[cards.length - 1]
   return (
     <div>
-      <Card value={last.value} suit={last.suit} ></Card>
+      <Card value={last.value} suit={last.suit} revealedStatus={last.revealed} ></Card>
     </div>
   )
 }

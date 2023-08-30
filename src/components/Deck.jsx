@@ -10,7 +10,7 @@ const Deck = ({ cards, moveCard, resetDeck}) => {
   const [first] = cards
   return (
     <div onClick={() => moveCard(first.id, 'turned')}>
-      <Card value={first.value} suit={first.suit} ></Card>
+      <Card value={first.value} suit={first.suit} revealedStatus={first.revealed} ></Card>
     </div>
   )
 }

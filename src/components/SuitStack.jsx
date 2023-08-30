@@ -17,7 +17,7 @@ const SuitStack = ({ cards }) => {
 
   return (
     <div>
-      <Card value={last.value} suit={last.suit} />
+      <Card value={last.value} suit={last.suit} revealedStatus={last.revealed} />
     </div>
   )
 }

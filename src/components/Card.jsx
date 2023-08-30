@@ -6,8 +6,8 @@ const ItemTypes = {
   CARD: 'CARD'
 }
 
-const Card = ({ value, suit }) => {
-  const [revealed, setRevealed] = useState(true)
+const Card = ({ value, suit, revealedStatus }) => {
+  const [revealed, setRevealed] = useState(revealedStatus)
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.CARD,
@@ -20,7 +20,8 @@ const Card = ({ value, suit }) => {
     opacity: isDragging ? 0.5 : 1,
     width: 100,
     height: 150,
-    margin: 5
+    margin: 5,
+    border: '1px black solid'
   }
 
   const cardValue = () => {
