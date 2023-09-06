@@ -1,16 +1,24 @@
 import PropTypes from 'prop-types'
+import { ItemTypes } from 'src/ItemTypes'
 import { useState } from 'react'
 import { useDrag } from 'react-dnd'
 
-const ItemTypes = {
-  CARD: 'CARD'
-}
-
-const Card = ({ value, suit, revealedStatus }) => {
+const Card = ({ id, value, suit, revealedStatus = true, moveCard, origin }) => {
   const [revealed, setRevealed] = useState(revealedStatus)
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.CARD,
+    item: { id: id, origin: origin },
+    end: (item, monitor) => {
+      if (monitor.getDropResult() === null) {
+        return null
+      }
+      const destination = monitor.getDropResult().destination
+      console.log(`item: ${item.id}, origin: ${item.origin}, destination: ${destination}`)
+      if (item && destination) {
+        moveCard(item.id, item.origin, destination)
+      }
+    },
     collect: monitor => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -20,7 +28,6 @@ const Card = ({ value, suit, revealedStatus }) => {
     opacity: isDragging ? 0.5 : 1,
     width: 100,
     height: 150,
-    margin: 5,
     border: '1px black solid'
   }
 
@@ -45,7 +52,7 @@ const Card = ({ value, suit, revealedStatus }) => {
 
   if (!revealed) {
     return (
-      <div ref={drag} style={cardStyle}
+      <div
       // onClick={() => setRevealed(!revealed)}
       >
         <svg width={100} height={150} >

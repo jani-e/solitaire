@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import Card from "src/components/Card"
 
-const Turned = ({ cards }) => {
+const Turned = ({ cards, moveCard }) => {
   if (cards.length === 0) {
     return (
       <div></div>
@@ -10,7 +10,7 @@ const Turned = ({ cards }) => {
   const last = cards[cards.length - 1]
   return (
     <div>
-      <Card value={last.value} suit={last.suit} revealedStatus={last.revealed} ></Card>
+      <Card origin='turned' moveCard={moveCard} id={last.id} value={last.value} suit={last.suit} revealedStatus={last.revealed} ></Card>
     </div>
   )
 }

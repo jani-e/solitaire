@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import Card from "src/components/Card"
 
-const Deck = ({ cards, moveCard, resetDeck}) => {
+const Deck = ({ cards, moveCard, resetDeck }) => {
   if (cards.length === 0) {
     return (
       <div onClick={() => resetDeck()}>reset</div>
@@ -9,8 +9,8 @@ const Deck = ({ cards, moveCard, resetDeck}) => {
   }
   const [first] = cards
   return (
-    <div onClick={() => moveCard(first.id, 'turned')}>
-      <Card value={first.value} suit={first.suit} revealedStatus={first.revealed} ></Card>
+    <div onClick={() => moveCard(first.id, 'stack', 'turned')}>
+      <Card origin='stack' moveCard={moveCard} id={first.id} value={first.value} suit={first.suit} revealedStatus={first.revealed} ></Card>
     </div>
   )
 }

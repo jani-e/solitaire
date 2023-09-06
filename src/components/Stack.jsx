@@ -1,25 +1,28 @@
 import PropTypes from 'prop-types'
 import Card from "src/components/Card"
+import Dropzone from 'src/components/Dropzone'
 
-const Stack = ({ cards }) => {
+const Stack = ({ cards, moveCard, origin }) => {
   if (cards.length === 0) {
     return (
-      <div></div>
+      <Dropzone origin={origin}>
+        <div></div>
+      </Dropzone>
     )
   }
 
   const [parent, ...children] = cards
 
   const childrenStyle = {
-    position: 'absolute',
+    position: 'relative',
     marginTop: '-130px'
   }
 
   return (
-    <div>
-      {<Card value={parent.value} suit={parent.suit} revealedStatus={parent.revealed} />}
-      {!!children.length && <div style={childrenStyle}>{<Stack cards={children} />}</div>}
-    </div>
+    <Dropzone origin={origin}>
+        {<Card origin={origin} moveCard={moveCard} id={parent.id} value={parent.value} suit={parent.suit} revealedStatus={parent.revealed} />}
+        {!!children.length && <div style={childrenStyle}>{<Stack cards={children} origin={origin} moveCard={moveCard} />}</div>}
+    </Dropzone>
   )
 }
 
