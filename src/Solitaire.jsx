@@ -6,18 +6,21 @@ import Deck from 'src/components/Deck'
 import Turned from 'src/components/Turned'
 import lodash from 'lodash'
 import SuitStack from './components/SuitStack'
+import createDeck from './utilities/createDeck'
 
 const Solitaire = () => {
-  const heartsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'hearts' }))
-  const diamondsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'diamonds' }))
-  const clubsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'clubs' }))
-  const spadesDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'spades' }))
+  // const heartsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'hearts' }))
+  // const diamondsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'diamonds' }))
+  // const clubsDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'clubs' }))
+  // const spadesDeck = [...Array(13).keys()].map(i => ({ value: i + 1, suit: 'spades' }))
 
-  const playDeck = lodash.shuffle(
-    heartsDeck
-      .concat(diamondsDeck, clubsDeck, spadesDeck)
-      .map((card, index) => ({ id: index + 1, ...card }))
-  )
+  // const playDeck = lodash.shuffle(
+  //   heartsDeck
+  //     .concat(diamondsDeck, clubsDeck, spadesDeck)
+  //     .map((card, index) => ({ id: index + 1, ...card }))
+  // )
+
+  const playDeck = lodash.shuffle(createDeck())
 
   const hideCards = (cards) => {
     const unRevealedCards = cards.map(card => ({ ...card, revealed: false }))
