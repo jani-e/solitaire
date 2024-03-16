@@ -1,34 +1,10 @@
 import PropTypes from 'prop-types'
-import { ItemTypes } from 'src/ItemTypes'
-import { useState } from 'react'
-import { useDrag } from 'react-dnd'
 
-const Card = ({ id, value, suit, revealedStatus = true, moveCard, origin }) => {
-  const [revealed, setRevealed] = useState(revealedStatus)
-
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.CARD,
-    item: { id: id, origin: origin },
-    end: (item, monitor) => {
-      if (monitor.getDropResult() === null) {
-        return null
-      }
-      const destination = monitor.getDropResult().destination
-      console.log(`item: ${item.id}, origin: ${item.origin}, destination: ${destination}`)
-      if (item && destination) {
-        moveCard(item.id, item.origin, destination)
-      }
-    },
-    collect: monitor => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }))
+const Card = ({ value, suit }) => {
 
   const cardStyle = {
-    opacity: isDragging ? 0.5 : 1,
-    width: 100,
-    height: 150,
-    border: '1px black solid'
+    userSelect: 'none',
+    maxHeight: '150px'
   }
 
   const cardValue = () => {
@@ -50,29 +26,15 @@ const Card = ({ id, value, suit, revealedStatus = true, moveCard, origin }) => {
     }
   }
 
-  if (!revealed) {
-    return (
-      <div
-      // onClick={() => setRevealed(!revealed)}
-      >
-        <svg width={100} height={150} >
-          <rect width='100%' height='150%' fill="lightgrey" />
-        </svg>
-      </div>
-    )
-  }
-
   return (
-    <div ref={drag} style={cardStyle}
-    // onClick={() => setRevealed(!revealed)}
-    >
-      <svg width={100} height={150} >
-        <rect width='100%' height='150%' fill="white" />
-        <text x={80} y={20} fill={cardSuit().color}>{cardValue()}</text>
-        <text x={5} y={140} fill={cardSuit().color}>{cardValue()}</text>
-        <text x={5} y={20} fill={cardSuit().color}>{cardSuit().small}</text>
-        <text x={80} y={140} fill={cardSuit().color}>{cardSuit().small}</text>
-        <text x={12} y={105} fill={cardSuit().color} fontSize={77}>{cardSuit().large}</text>
+    <div style={cardStyle}>
+      <svg width='100%' height='100%'>
+        <rect width='100%' height='100%' fill="white" />
+        <text x='7%' y='17%' fill={cardSuit().color} fontSize='150%'>{cardSuit().small}</text>
+        <text x='93%' y='17%' textAnchor='end' fill={cardSuit().color} fontSize='150%'>{cardValue()}</text>
+        <text x='7%' y='93%' fill={cardSuit().color} fontSize='150%'>{cardValue()}</text>
+        <text x='93%' y='93%' textAnchor='end' fill={cardSuit().color} fontSize='150%'>{cardSuit().small}</text>
+        <text x='50%' y='67.5%' textAnchor='middle' fill={cardSuit().color} fontSize='500%'>{cardSuit().large}</text>
       </svg>
     </div>
   )

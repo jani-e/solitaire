@@ -1,27 +1,31 @@
 import PropTypes from 'prop-types'
-import Card from 'src/components/Card'
-import Dropzone from 'src/components/Dropzone'
+import CardCover from './CardCover'
+import CardFrame from './CardFrame'
 
-const SuitStack = ({ cards, origin, moveCard }) => {
-  const emptyStyle = {
-    backgroundColor: 'lightgrey',
-    margin: '5px 0px 5px 5px'
+const SuitStack = ({ cards }) => {
+
+  const emptySuitStackStyle = {
+    boxSizing: 'border-box',
+    border: '2px solid black',
+    marginLeft: '2px'
   }
 
   if (cards.length === 0) {
     return (
-      <Dropzone origin={origin}>
-        <div style={emptyStyle}></div>
-      </Dropzone>
+      <div style={emptySuitStackStyle}>
+        <CardCover />
+      </div>
     )
   }
+
   const [first] = cards
+  const suit = first.suit
   const last = cards[cards.length - 1]
 
   return (
-    <Dropzone origin={origin}>
-        <Card origin={origin} moveCard={moveCard} id={parent.id} value={last.value} suit={last.suit} revealedStatus={last.revealed} />
-    </Dropzone>
+    <div id={suit}>
+      <CardFrame id={parent.id} value={last.value} suit={last.suit} />
+    </div>
   )
 }
 
