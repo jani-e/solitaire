@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import CardFrame from './CardFrame'
 
-const GameStack = ({ cards }) => {
+const GameStack = ({ id, cards }) => {
   if (cards.length === 0) {
     return (
       <div></div>
@@ -17,13 +17,14 @@ const GameStack = ({ cards }) => {
 
   return (
     <div>
-      {<CardFrame id={parent.id} value={parent.value} suit={parent.suit} revealedStatus={parent.revealed} />}
+      {<CardFrame origin={id} id={parent.id} value={parent.value} suit={parent.suit} revealedStatus={parent.revealed} cardSet={cards} />}
       {!!children.length && <div style={childrenStyle}>{<GameStack cards={children} />}</div>}
     </div>
   )
 }
 
 GameStack.propTypes = {
+  id: PropTypes.string,
   cards: PropTypes.array
 }
 
