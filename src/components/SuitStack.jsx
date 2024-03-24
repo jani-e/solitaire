@@ -9,7 +9,7 @@ const SuitStack = ({ id, cards }) => {
   })
 
   const droppableStyle = {
-    borderColor: isOver ? 'red' : 'black'
+    // borderColor: isOver ? 'red' : 'black' //conflict during rerender
   }
 
   const emptySuitStackStyle = {
@@ -21,18 +21,18 @@ const SuitStack = ({ id, cards }) => {
   if (cards.length === 0) {
     return (
       <div ref={setNodeRef} style={{ ...emptySuitStackStyle, ...droppableStyle }}>
-        <CardCover />
+        <CardCover blank={true} />
       </div>
     )
   }
 
-  const [first] = cards
-  const suit = first.suit
+  // const [first] = cards
+  // const suit = first.suit
   const last = cards[cards.length - 1]
 
   return (
-    <div id={suit} ref={setNodeRef} style={droppableStyle}>
-      <CardFrame id={parent.id} value={last.value} suit={last.suit} />
+    <div id={id} ref={setNodeRef} style={droppableStyle}>
+      <CardFrame origin={id} id={last.id} value={last.value} suit={last.suit} />
     </div>
   )
 }

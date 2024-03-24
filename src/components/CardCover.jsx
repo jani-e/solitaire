@@ -1,9 +1,20 @@
-const CardCover = () => {
+const CardCover = ({ blank = false }) => {
 
   const cardCoverStyle = {
     userSelect: 'none',
     maxHeight: '150px'
   }
+
+  if (blank) {
+    return (
+      <div style={cardCoverStyle}>
+        <svg width='100%' height='100%'>
+          <rect width='100%' height='100%' fill='#358a13' display='block' />
+        </svg>
+      </div >
+    )
+  }
+
   return (
     <div style={cardCoverStyle}>
       <svg width='100%' height='100%'>

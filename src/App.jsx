@@ -7,6 +7,7 @@ import SuitStack from './components/SuitStack'
 import createDeck from './utilities/createDeck'
 import './App.css'
 import { DndContext } from '@dnd-kit/core'
+import validate from './utilities/validate'
 
 const App = () => {
   const initialDeck = lodash.shuffle(createDeck())
@@ -53,25 +54,56 @@ const App = () => {
     })
   }
 
+  const removeFromSuitStack = (suitStack, card) => {
+    setSuitStacks(prevState => ({
+      ...prevState,
+      [suitStack]: suitStacks[suitStack].filter(item => item.id !== card.id)
+    }))
+  }
+
+  const isValidMove = (toStackId, cards) => {
+    const stackData = getStackData(toStackId)
+    return validate(stackData, cards)
+  }
+
+  const getStackData = (stack) => {
+    if (stack in suitStacks) {
+      return ['suitStack', suitStacks[stack]]
+    }
+    if (stack in gameStacks) {
+      return ['gameStack', gameStacks[stack]]
+    }
+    return null
+  }
+
+  const executeMove = (fromStackId, toStackId, cards) => {
+    if (toStackId in suitStacks) {
+      addToSuitStack(toStackId, cards[0])
+    }
+    if (fromStackId in suitStacks) {
+      removeFromSuitStack(fromStackId, cards[0])
+    }
+    if (fromStackId === 'turnedStack') {
+      removeTurnedCard()
+    }
+  }
+
   const handleDragEnd = (event) => {
     console.log(event)
     if (event.over) {
       const frame = event.active.id
-      const from = event.active.data.current.from
-      const to = event.over.id
+      const fromStackId = event.active.data.current.from
+      const toStackId = event.over.id
       const cards = event.active.data.current.cards
       console.log('frame', frame)
-      console.log('from', from)
-      console.log('to', to)
+      console.log('from', fromStackId)
+      console.log('to', toStackId)
       console.log('card(s):')
       cards.forEach(card => {
         console.log(card)
       });
-      if (to in suitStacks) {
-        addToSuitStack(to, cards[0])
-      }
-      if (from === 'turnedStack') {
-        removeTurnedCard()
+      if (isValidMove(toStackId, cards)) {
+        executeMove(fromStackId, toStackId, cards)
       }
     }
   }
