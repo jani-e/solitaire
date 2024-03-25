@@ -23,7 +23,7 @@ const suitStackValidation = (stackData, cards) => {
 
 const gameStackValidation = (stackData, cards) => {
   console.log('gameStack validation not implemented yet')
-  return false
+  return 'gameStack validation not implemented yet' //temporary value for test cases
 }
 
 const validate = (stackData, cards) => {
