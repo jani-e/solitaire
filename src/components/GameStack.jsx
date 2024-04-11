@@ -1,24 +1,38 @@
 import PropTypes from 'prop-types'
-import CardFrame from './CardFrame'
+import GameStackFrame from './GameStackFrame'
+import { useDroppable } from '@dnd-kit/core'
+import { useState } from 'react'
 
 const GameStack = ({ id, cards }) => {
+  const [hiddenCount, setHiddenCount] = useState(Number(id.slice(1)))
+
+  const updateHiddenCount = () => {
+    setHiddenCount(hiddenCount - 1)
+  }
+
+  const { isOver, setNodeRef } = useDroppable({
+    id: id
+  })
+
+  const emptyStackStyle = {
+    boxSizing: 'border-box',
+    border: '2px solid black',
+    marginLeft: '2px'
+  }
+
+  const droppableStyle = {
+    // borderColor: isOver ? 'red' : 'black' //conflict during rerender
+  }
   if (cards.length === 0) {
     return (
-      <div></div>
+      <div ref={setNodeRef} style={{ ...emptyStackStyle, ...droppableStyle }}>
+        <div id={id}></div>
+      </div>
     )
   }
-
-  const [parent, ...children] = cards
-
-  const childrenStyle = {
-    position: 'relative',
-    marginTop: '-130px'
-  }
-
   return (
-    <div>
-      {<CardFrame origin={id} id={parent.id} value={parent.value} suit={parent.suit} revealedStatus={parent.revealed} cardSet={cards} />}
-      {!!children.length && <div style={childrenStyle}>{<GameStack cards={children} />}</div>}
+    <div id={id} ref={setNodeRef} style={droppableStyle}>
+      <GameStackFrame origin={id} id={id} cards={cards} hiddenCount={hiddenCount} updateHiddenCount={updateHiddenCount} />
     </div>
   )
 }

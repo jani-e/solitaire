@@ -26,8 +26,6 @@ const SuitStack = ({ id, cards }) => {
     )
   }
 
-  // const [first] = cards
-  // const suit = first.suit
   const last = cards[cards.length - 1]
 
   return (

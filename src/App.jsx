@@ -16,13 +16,13 @@ const App = () => {
   const [turnedStack, setTurnedStack] = useState([])
   const [suitStacks, setSuitStacks] = useState({ A: [], B: [], C: [], D: [] })
   const [gameStacks, setGameStacks] = useState({
-    0: initialDeck.slice(0, 1),
-    1: initialDeck.slice(1, 3),
-    2: initialDeck.slice(3, 6),
-    3: initialDeck.slice(6, 10),
-    4: initialDeck.slice(10, 15),
-    5: initialDeck.slice(15, 21),
-    6: initialDeck.slice(21, 28)
+    G0: initialDeck.slice(0, 1),
+    G1: initialDeck.slice(1, 3),
+    G2: initialDeck.slice(3, 6),
+    G3: initialDeck.slice(6, 10),
+    G4: initialDeck.slice(10, 15),
+    G5: initialDeck.slice(15, 21),
+    G6: initialDeck.slice(21, 28)
   })
 
   const layoutStyle = {
@@ -61,6 +61,21 @@ const App = () => {
     }))
   }
 
+  const addToGameStack = (gameStack, cards) => {
+    setGameStacks({
+      ...gameStacks,
+      [gameStack]: gameStacks[gameStack].concat(cards)
+    })
+  }
+
+  const removeFromGameStack = (gameStack, cards) => {
+    const cardIds = cards.map(card => card.id)
+    setGameStacks(prevState => ({
+      ...prevState,
+      [gameStack]: gameStacks[gameStack].filter(item => !cardIds.includes(item.id))
+    }))
+  }
+
   const isValidMove = (toStackId, cards) => {
     const stackData = getStackData(toStackId)
     return validate(stackData, cards)
@@ -83,6 +98,12 @@ const App = () => {
     if (fromStackId in suitStacks) {
       removeFromSuitStack(fromStackId, cards[0])
     }
+    if (toStackId in gameStacks) {
+      addToGameStack(toStackId, cards)
+    }
+    if (fromStackId in gameStacks) {
+      removeFromGameStack(fromStackId, cards)
+    }
     if (fromStackId === 'turnedStack') {
       removeTurnedCard()
     }
@@ -92,9 +113,12 @@ const App = () => {
     console.log(event)
     if (event.over) {
       const frame = event.active.id
-      const fromStackId = event.active.data.current.from
+      let fromStackId = event.active.data.current.from
       const toStackId = event.over.id
       const cards = event.active.data.current.cards
+      if (fromStackId.includes('_')) {
+        fromStackId = fromStackId.slice(0, 2)
+      }
       console.log('frame', frame)
       console.log('from', fromStackId)
       console.log('to', toStackId)
