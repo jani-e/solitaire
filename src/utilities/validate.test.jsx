@@ -94,7 +94,7 @@ describe('Solitaire Game stack validation', () => {
   })
 
   test(`doesn't allow next card with correct suit and incorrect value`, () => {
-    const nextCard = [{ id: 8, value: 8, suit: 'hearts' }]
+    const nextCard = [{ id: 8, value: 11, suit: 'hearts' }]
     const validationResult = validate(gameStack, nextCard)
     expect(validationResult).toBe(false)
   })
@@ -107,8 +107,9 @@ describe('Solitaire Game stack validation', () => {
 
   test(`doesn't allow a set of incorrect cards`, () => {
     const incorrectCards = [
-      { id: 8, value: 8, suit: 'hearts' },
-      { id: 20, value: 7, suit: 'diamonds' }
+      { id: 8, value: 8, suit: 'clubs' },
+      { id: 20, value: 7, suit: 'diamonds' },
+      { id: 46, value: 7, suit: 'spades'}
     ]
     const validationResult = validate(gameStack, incorrectCards)
     expect(validationResult).toBe(false)

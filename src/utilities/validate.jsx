@@ -22,8 +22,27 @@ const suitStackValidation = (stackData, cards) => {
 }
 
 const gameStackValidation = (stackData, cards) => {
-  console.log('gameStack validation not implemented')
-  //false cases here
+  const suitValues = {
+    'hearts': 0,
+    'diamonds': 0,
+    'clubs': 1,
+    'spades': 1
+  }
+  const lastCard = stackData[1][stackData[1].length - 1]
+  const firstCard = cards[0]
+  
+  if (stackData[1].length === 0 && firstCard.value === 13) {
+    return true
+  }
+  if (stackData[1].length === 0 && firstCard.value !== 13) {
+    return false
+  }
+  if (suitValues[lastCard.suit] + suitValues[firstCard.suit] !== 1) {
+    return false
+  }
+  if (lastCard.value - firstCard.value !== 1) {
+    return false
+  }
   return true
 }
 
