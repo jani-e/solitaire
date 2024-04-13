@@ -1,15 +1,16 @@
+import PropTypes from 'prop-types'
+
 const CardCover = ({ blank = false }) => {
 
   const cardCoverStyle = {
-    userSelect: 'none',
-    maxHeight: '150px'
+    userSelect: 'none'
   }
 
   if (blank) {
     return (
       <div style={cardCoverStyle}>
-        <svg width='100%' height='100%'>
-          <rect width='100%' height='100%' fill='#358a13' display='block' />
+        <svg viewBox='0 0 100 150'>
+          <rect width='100%' height='100%' fill='#358a13' display='block' stroke='black' strokeWidth='5%' />
         </svg>
       </div >
     )
@@ -17,7 +18,7 @@ const CardCover = ({ blank = false }) => {
 
   return (
     <div style={cardCoverStyle}>
-      <svg width='100%' height='100%'>
+      <svg viewBox='0 0 100 150'>
         <defs>
           <radialGradient
             id="grad"
@@ -31,10 +32,14 @@ const CardCover = ({ blank = false }) => {
             <stop offset="100%" stopColor='rgb(37,111,159)' stopOpacity={1} />
           </radialGradient>
         </defs>
-        <rect width='100%' height='100%' fill='url(#grad)' display='block' />
+        <rect width='100%' height='100%' fill='url(#grad)' display='block' stroke='black' strokeWidth='5%' />
       </svg>
     </div>
   )
+}
+
+CardCover.propTypes = {
+  blank: PropTypes.bool
 }
 
 export default CardCover

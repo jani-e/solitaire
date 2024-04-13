@@ -10,28 +10,23 @@ const GameStack = ({ id, cards }) => {
     setHiddenCount(hiddenCount - 1)
   }
 
-  const { isOver, setNodeRef } = useDroppable({
+  const { setNodeRef } = useDroppable({
     id: id
   })
 
   const emptyStackStyle = {
-    boxSizing: 'border-box',
-    border: '2px solid black',
     marginLeft: '2px'
   }
 
-  const droppableStyle = {
-    // borderColor: isOver ? 'red' : 'black' //conflict during rerender
-  }
   if (cards.length === 0) {
     return (
-      <div ref={setNodeRef} style={{ ...emptyStackStyle, ...droppableStyle }}>
+      <div ref={setNodeRef} style={emptyStackStyle}>
         <div id={id}></div>
       </div>
     )
   }
   return (
-    <div id={id} ref={setNodeRef} style={droppableStyle}>
+    <div id={id} ref={setNodeRef}>
       <GameStackFrame origin={id} id={id} cards={cards} hiddenCount={hiddenCount} updateHiddenCount={updateHiddenCount} />
     </div>
   )

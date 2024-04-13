@@ -17,8 +17,6 @@ const CardFrame = ({ id, value, suit, revealed = true, origin = null, cardSet = 
   } : undefined
 
   const cardFrameStyle = {
-    boxSizing: 'border-box',
-    border: '2px solid black',
     marginLeft: '2px'
   }
 

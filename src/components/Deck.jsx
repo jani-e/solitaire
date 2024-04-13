@@ -3,9 +3,6 @@ import CardFrame from './CardFrame'
 
 const Deck = ({ cards, turnCard, resetDeck }) => {
   const refreshDeckStyle = {
-    boxSizing: 'border-box',
-    border: '2px solid black',
-    maxHeight: '154px',
     marginLeft: '2px',
     userSelect: 'none'
   }
@@ -13,8 +10,8 @@ const Deck = ({ cards, turnCard, resetDeck }) => {
   if (cards.length === 0) {
     return (
       <div onClick={() => resetDeck()} style={refreshDeckStyle}>
-        <svg width='100%' height='100%'>
-          <rect width='100%' height='100%' fill='#358a13' />
+        <svg viewBox='0 0 100 150'>
+          <rect width='100%' height='100%' fill='#358a13' stroke='black' strokeWidth='5%' />
           <text x='50%' y='67.5%' textAnchor='middle' fontSize='500%'>{'\u21BB'}</text>
         </svg>
       </div>

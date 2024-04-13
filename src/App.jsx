@@ -27,8 +27,7 @@ const App = () => {
 
   const layoutStyle = {
     display: 'grid',
-    gridTemplateColumns: '14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2%',
-    maxWidth: '800px'
+    gridTemplateColumns: '14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2%'
   }
 
   const turnCard = () => {
@@ -110,22 +109,22 @@ const App = () => {
   }
 
   const handleDragEnd = (event) => {
-    console.log(event)
+    // console.log(event)
     if (event.over) {
-      const frame = event.active.id
+      // const frame = event.active.id
       let fromStackId = event.active.data.current.from
       const toStackId = event.over.id
       const cards = event.active.data.current.cards
       if (fromStackId.includes('_')) {
         fromStackId = fromStackId.slice(0, 2)
       }
-      console.log('frame', frame)
-      console.log('from', fromStackId)
-      console.log('to', toStackId)
-      console.log('card(s):')
-      cards.forEach(card => {
-        console.log(card)
-      });
+      // console.log('frame', frame)
+      // console.log('from', fromStackId)
+      // console.log('to', toStackId)
+      // console.log('card(s):')
+      // cards.forEach(card => {
+      //   console.log(card)
+      // })
       if (isValidMove(toStackId, cards)) {
         executeMove(fromStackId, toStackId, cards)
       }

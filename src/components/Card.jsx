@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 const Card = ({ value, suit }) => {
 
   const cardStyle = {
-    userSelect: 'none',
-    maxHeight: '150px'
+    userSelect: 'none'
   }
 
   const cardValue = () => {
@@ -28,8 +27,8 @@ const Card = ({ value, suit }) => {
 
   return (
     <div style={cardStyle}>
-      <svg width='100%' height='100%'>
-        <rect width='100%' height='100%' fill="white" />
+      <svg viewBox='0 0 100 150'>
+        <rect width='100%' height='100%' fill='white' stroke='black' strokeWidth='5%' />
         <text x='7%' y='17%' fill={cardSuit().color} fontSize='150%'>{cardSuit().small}</text>
         <text x='93%' y='17%' textAnchor='end' fill={cardSuit().color} fontSize='150%'>{cardValue()}</text>
         <text x='7%' y='93%' fill={cardSuit().color} fontSize='150%'>{cardValue()}</text>

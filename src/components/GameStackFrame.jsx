@@ -17,14 +17,11 @@ const GameStackFrame = ({ id, hiddenCount, updateHiddenCount, origin = null, car
   } : undefined
 
   const cardFrameStyle = {
-    boxSizing: 'border-box',
-    border: '2px solid black',
     marginLeft: '2px'
   }
 
   const childrenStyle = {
-    position: 'relative',
-    marginTop: '-130px'
+    marginTop: '-120%'
   }
 
   const [parent, ...children] = cards
