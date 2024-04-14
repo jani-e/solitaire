@@ -12,6 +12,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  overflow: hidden;
 }
 
 a {
@@ -28,6 +30,7 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
+  overflow: hidden;
 }
 
 h1 {
