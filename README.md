@@ -4,7 +4,7 @@
 
 ## Version history
 
-### 1.0.1
+### 1.1.0
 * Undo -feature added
 * Adjusted view scaling
 
