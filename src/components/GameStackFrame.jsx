@@ -3,7 +3,7 @@ import Card from './Card'
 import CardCover from './CardCover'
 import { useDraggable } from '@dnd-kit/core'
 
-const GameStackFrame = ({ id, hiddenCount, updateHiddenCount, origin = null, cards }) => {
+const GameStackFrame = ({ id, hiddenCount, handleHiddenCount, origin = null, cards }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `${id}_frame`,
     data: {
@@ -30,7 +30,7 @@ const GameStackFrame = ({ id, hiddenCount, updateHiddenCount, origin = null, car
 
   const handleRevealClick = () => {
     if (newHiddenCount === 0 && children.length === 0) {
-      updateHiddenCount()
+      handleHiddenCount()
     }
   }
 
@@ -39,7 +39,7 @@ const GameStackFrame = ({ id, hiddenCount, updateHiddenCount, origin = null, car
       <div>
         <div style={cardFrameStyle} onClick={() => handleRevealClick()}>
           <CardCover /></div>
-        {!!children.length && <div style={childrenStyle}>{<GameStackFrame id={childrenFrameId} origin={id} cards={children} hiddenCount={newHiddenCount} updateHiddenCount={updateHiddenCount} />}</div>}
+        {!!children.length && <div style={childrenStyle}>{<GameStackFrame id={childrenFrameId} origin={id} cards={children} hiddenCount={newHiddenCount} handleHiddenCount={handleHiddenCount} />}</div>}
       </div>
     )
   }
@@ -49,7 +49,7 @@ const GameStackFrame = ({ id, hiddenCount, updateHiddenCount, origin = null, car
       <div style={cardFrameStyle}>
         <Card value={parent.value} suit={parent.suit} />
       </div>
-      {!!children.length && <div style={childrenStyle}>{<GameStackFrame id={childrenFrameId} origin={id} cards={children} hiddenCount={newHiddenCount} updateHiddenCount={updateHiddenCount} />}</div>}
+      {!!children.length && <div style={childrenStyle}>{<GameStackFrame id={childrenFrameId} origin={id} cards={children} hiddenCount={newHiddenCount} handleHiddenCount={handleHiddenCount} />}</div>}
     </div>
   )
 }
@@ -57,7 +57,7 @@ const GameStackFrame = ({ id, hiddenCount, updateHiddenCount, origin = null, car
 GameStackFrame.propTypes = {
   id: PropTypes.string,
   hiddenCount: PropTypes.number,
-  updateHiddenCount: PropTypes.func,
+  handleHiddenCount: PropTypes.func,
   origin: PropTypes.string,
   cards: PropTypes.array
 }

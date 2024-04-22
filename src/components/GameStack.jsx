@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types'
 import GameStackFrame from './GameStackFrame'
 import { useDroppable } from '@dnd-kit/core'
-import { useState } from 'react'
 
-const GameStack = ({ id, cards }) => {
-  const [hiddenCount, setHiddenCount] = useState(Number(id.slice(1)))
+const GameStack = ({ id, cards, hiddenCount, updateHiddenCount }) => {
 
-  const updateHiddenCount = () => {
-    setHiddenCount(hiddenCount - 1)
+  const handleHiddenCount = () => {
+    updateHiddenCount(id)
   }
 
   const { setNodeRef } = useDroppable({
@@ -27,14 +25,16 @@ const GameStack = ({ id, cards }) => {
   }
   return (
     <div id={id} ref={setNodeRef}>
-      <GameStackFrame origin={id} id={id} cards={cards} hiddenCount={hiddenCount} updateHiddenCount={updateHiddenCount} />
+      <GameStackFrame origin={id} id={id} cards={cards} hiddenCount={hiddenCount} handleHiddenCount={handleHiddenCount} />
     </div>
   )
 }
 
 GameStack.propTypes = {
   id: PropTypes.string,
-  cards: PropTypes.array
+  cards: PropTypes.array,
+  hiddenCount: PropTypes.number,
+  updateHiddenCount: PropTypes.func
 }
 
 export default GameStack

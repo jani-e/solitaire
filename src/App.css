@@ -1,5 +1,35 @@
+#game {
+  position: absolute;
+  left: 50%;
+}
+
 main {
-    margin: 5%;
-    width: 90vw;
-    padding-bottom: 20%;
+  position: relative;
+  left: -55%;
+  margin: 5%;
+  width: 90vw;
+  padding-bottom: 20vh;
+}
+
+@media screen and (min-aspect-ratio: 9/16) {
+  main {
+    padding-bottom: 10vh;
+  }
+}
+
+@media screen and (min-width: 90vh) {
+  main {
+    max-width: 80vh;
+  }
+}
+
+#game-bar {
+  padding-top: 20px;
+  position: relative;
+  left: -50%;
+}
+
+#game-bar button {
+  width: 14.2%;
+  padding: 10px 0;
 }

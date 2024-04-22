@@ -8,6 +8,7 @@ import createDeck from './utilities/createDeck'
 import './App.css'
 import { DndContext } from '@dnd-kit/core'
 import validate from './utilities/validate'
+import GameBar from './components/GameBar'
 
 const App = () => {
   const initialDeck = lodash.shuffle(createDeck())
@@ -16,13 +17,18 @@ const App = () => {
   const [turnedStack, setTurnedStack] = useState([])
   const [suitStacks, setSuitStacks] = useState({ A: [], B: [], C: [], D: [] })
   const [gameStacks, setGameStacks] = useState({
-    G0: initialDeck.slice(0, 1),
-    G1: initialDeck.slice(1, 3),
-    G2: initialDeck.slice(3, 6),
-    G3: initialDeck.slice(6, 10),
-    G4: initialDeck.slice(10, 15),
-    G5: initialDeck.slice(15, 21),
-    G6: initialDeck.slice(21, 28)
+    G0: { cards: initialDeck.slice(0, 1), hiddenCount: 0 },
+    G1: { cards: initialDeck.slice(1, 3), hiddenCount: 1 },
+    G2: { cards: initialDeck.slice(3, 6), hiddenCount: 2 },
+    G3: { cards: initialDeck.slice(6, 10), hiddenCount: 3 },
+    G4: { cards: initialDeck.slice(10, 15), hiddenCount: 4 },
+    G5: { cards: initialDeck.slice(15, 21), hiddenCount: 5 },
+    G6: { cards: initialDeck.slice(21, 28), hiddenCount: 6 }
+  })
+
+  const [history, setHistory] = useState({
+    count: 0,
+    cardsState: []
   })
 
   const layoutStyle = {
@@ -30,10 +36,23 @@ const App = () => {
     gridTemplateColumns: '14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2%'
   }
 
+  const saveHistoryState = () => {
+    setHistory({
+      ...history, count: history.count + 1,
+      cardsState: history.cardsState.concat({
+        deck: deckStack,
+        turned: turnedStack,
+        suit: suitStacks,
+        game: gameStacks
+      })
+    })
+  }
+
   const turnCard = () => {
     const [firstCardInDeck] = deckStack
     setDeckStack(deckStack.filter(card => card.id !== firstCardInDeck.id))
     setTurnedStack(turnedStack.concat(deckStack.find(card => card.id === firstCardInDeck.id)))
+    saveHistoryState()
   }
 
   const removeTurnedCard = () => {
@@ -61,17 +80,24 @@ const App = () => {
   }
 
   const addToGameStack = (gameStack, cards) => {
-    setGameStacks({
-      ...gameStacks,
-      [gameStack]: gameStacks[gameStack].concat(cards)
-    })
+    console.log(gameStack, cards)
+    setGameStacks(prevState => ({
+      ...prevState,
+      [gameStack]: {
+        ...prevState[gameStack],
+        cards: prevState[gameStack].cards.concat(cards)
+      }
+    }))
   }
 
   const removeFromGameStack = (gameStack, cards) => {
     const cardIds = cards.map(card => card.id)
     setGameStacks(prevState => ({
       ...prevState,
-      [gameStack]: gameStacks[gameStack].filter(item => !cardIds.includes(item.id))
+      [gameStack]: {
+        ...prevState[gameStack],
+        cards: prevState[gameStack].cards.filter(item => !cardIds.includes(item.id))
+      }
     }))
   }
 
@@ -85,7 +111,7 @@ const App = () => {
       return ['suitStack', suitStacks[stack]]
     }
     if (stack in gameStacks) {
-      return ['gameStack', gameStacks[stack]]
+      return ['gameStack', gameStacks[stack].cards]
     }
     return null
   }
@@ -109,47 +135,63 @@ const App = () => {
   }
 
   const handleDragEnd = (event) => {
-    // console.log(event)
     if (event.over) {
-      // const frame = event.active.id
       let fromStackId = event.active.data.current.from
       const toStackId = event.over.id
       const cards = event.active.data.current.cards
       if (fromStackId.includes('_')) {
         fromStackId = fromStackId.slice(0, 2)
       }
-      // console.log('frame', frame)
-      // console.log('from', fromStackId)
-      // console.log('to', toStackId)
-      // console.log('card(s):')
-      // cards.forEach(card => {
-      //   console.log(card)
-      // })
       if (isValidMove(toStackId, cards)) {
         executeMove(fromStackId, toStackId, cards)
+        saveHistoryState()
       }
     }
   }
 
+  const handleUndo = () => {
+    const copyCardsStateHistory = [...history.cardsState]
+    const applyHistory = copyCardsStateHistory.pop()
+    setDeckStack(applyHistory.deck)
+    setTurnedStack(applyHistory.turned)
+    setSuitStacks(applyHistory.suit)
+    setGameStacks(applyHistory.game)
+    setHistory({ count: history.count - 1, cardsState: copyCardsStateHistory })
+  }
+
+  const updateHiddenCount = (gameStack) => {
+    const newCount = gameStacks[gameStack].hiddenCount - 1
+    setGameStacks(prevState => ({
+      ...prevState,
+      [gameStack]: {
+        ...prevState[gameStack],
+        hiddenCount: prevState[gameStack].hiddenCount = newCount
+      }
+    }))
+  }
+
   return (
-    <main>
-      <DndContext onDragEnd={handleDragEnd}>
-        <div style={layoutStyle}>
-          <Deck turnCard={turnCard} resetDeck={resetDeck} cards={deckStack} />
-          <Turned id='turnedStack' cards={turnedStack} />
-          <div></div>
-          {Object.keys(suitStacks).map((stack) => (
-            <SuitStack key={stack} id={stack} cards={suitStacks[stack]} />
-          ))}
-        </div>
-        <br></br>
-        <div style={layoutStyle}>
-          {Object.keys(gameStacks).map((stack) => (
-            <GameStack key={stack} id={stack} cards={gameStacks[stack]} />
-          ))}
-        </div>
-      </DndContext>
-    </main>
+    <div id='game'>
+      <GameBar count={history.count} handleUndo={handleUndo} />
+      <main>
+        <DndContext onDragEnd={handleDragEnd}>
+          <div style={layoutStyle}>
+            <Deck turnCard={turnCard} resetDeck={resetDeck} cards={deckStack} />
+            <Turned id='turnedStack' cards={turnedStack} />
+            <div></div>
+            {Object.keys(suitStacks).map((stack) => (
+              <SuitStack key={stack} id={stack} cards={suitStacks[stack]} />
+            ))}
+          </div>
+          <br></br>
+          <div style={layoutStyle}>
+            {Object.keys(gameStacks).map((stack) => (
+              <GameStack key={stack} id={stack} cards={gameStacks[stack].cards} hiddenCount={gameStacks[stack].hiddenCount} updateHiddenCount={updateHiddenCount} />
+            ))}
+          </div>
+        </DndContext>
+      </main>
+    </div>
   )
 }
 

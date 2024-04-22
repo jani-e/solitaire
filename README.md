@@ -4,6 +4,10 @@
 
 ## Version history
 
+### 1.0.1
+* Undo -feature added
+* Adjusted view scaling
+
 ### 1.0.0
 * MVP version of Solitaire Klondike
 * Preview:
