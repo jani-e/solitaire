@@ -29,3 +29,7 @@ jobs:
         with:
           name: react-build
           path: solitaire
+
+      - name: Send POST request to update backend
+        run: |
+          curl -X POST https://jani-e.fly.dev/update-build/solitaire
