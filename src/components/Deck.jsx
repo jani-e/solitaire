@@ -11,7 +11,7 @@ const Deck = ({ cards, turnCard, resetDeck }) => {
     return (
       <div onClick={() => resetDeck()} style={refreshDeckStyle}>
         <svg viewBox='0 0 100 150'>
-          <rect width='100%' height='100%' fill='#358a13' stroke='black' strokeWidth='5%' />
+          <rect width='100%' height='100%' fillOpacity='0.2' stroke='black' strokeWidth='5%' />
           <text x='50%' y='67.5%' textAnchor='middle' fontSize='500%'>{'\u21BB'}</text>
         </svg>
       </div>

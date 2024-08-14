@@ -1,25 +1,33 @@
 import PropTypes from 'prop-types'
+import GameBarButton from './GameBarButton'
+import GameBarInfo from './GameBarInfo'
 
-const GameBar = ({count, handleUndo}) => {
-
+const GameBar = ({ count, handleUndo, createNewGame, score, timer }) => {
+  
   const gameBarStyle = {
-    paddingTop: '20px',
+    marginTop: '2%',
     position: 'relative',
     left: '-50%',
+    display: 'grid',
+    gridTemplateColumns: '14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2%',
+    placeContent: 'center'
   }
-
-  const buttonStyle = {
-    width: '14.2%',
-    padding: '7px 0',
+  
+  const handleNewGame = () => {
+    if (confirm('Create a new game?')) {
+      createNewGame()
+    }
   }
 
   return (
     <div style={gameBarStyle}>
-      {count > 0 ? <button style={buttonStyle} onClick={() => handleUndo()}>Undo</button> : <button style={buttonStyle} disabled>Undo</button>}
-      {/* <span>Score: 0</span>
-      <span>Time: 0:00</span>
-      <button style={buttonStyle} disabled>New game</button>
-      <button style={buttonStyle} disabled>Settings</button> */}
+      <GameBarButton handleClick={handleUndo} text={'Undo \u27F2'} disabled={!count > 0} />
+      <div></div>
+      <GameBarInfo text={'SCORE'} value={score} />
+      <GameBarInfo text={'TIME'} value={timer} />
+      <div></div>
+      <GameBarButton handleClick={handleNewGame} text={'New game'} />
+      <GameBarButton text={'Settings'} disabled={true} />
     </div>
   )
 }
@@ -28,5 +36,8 @@ export default GameBar
 
 GameBar.propTypes = {
   count: PropTypes.number,
-  handleUndo: PropTypes.func
+  handleUndo: PropTypes.func,
+  createNewGame: PropTypes.func,
+  score: PropTypes.string,
+  timer: PropTypes.string
 }

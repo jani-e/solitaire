@@ -5,9 +5,8 @@
 
 main {
   position: relative;
-  left: -55%;
-  margin: 5%;
-  width: 90vw;
+  left: -50%;
+  width: 95vw;
   padding-bottom: 20vh;
 }
 
@@ -17,19 +16,8 @@ main {
   }
 }
 
-@media screen and (min-width: 90vh) {
+@media screen and (min-width: 80vh) {
   main {
-    max-width: 80vh;
+    max-width: 70vh;
   }
-}
-
-#game-bar {
-  padding-top: 20px;
-  position: relative;
-  left: -50%;
-}
-
-#game-bar button {
-  width: 14.2%;
-  padding: 10px 0;
 }

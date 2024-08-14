@@ -4,6 +4,12 @@
 
 ## Version history
 
+### 1.2.0
+* Added game scoring for moves
+* Added count up timer for the game duration
+* Added victory modal when game is finished
+* Updated visual styling
+
 ### 1.1.0
 * Undo -feature added
 * Adjusted view scaling

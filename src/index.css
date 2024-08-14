@@ -5,7 +5,8 @@
 
   /* color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87); */
-  background-color: #358a13;
+  /* background-color: #358a13; */
+  background: linear-gradient(135deg, #a8e063, #56ab2f, #76b852);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -27,10 +28,8 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  height: 100vh;
   min-width: 320px;
-  overflow: hidden;
   touch-action: none;
 }
 

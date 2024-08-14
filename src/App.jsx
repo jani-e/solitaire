@@ -1,14 +1,18 @@
-import { useState } from 'react'
+import './App.css'
+import lodash from 'lodash'
+import { DndContext } from '@dnd-kit/core'
+import { useState, useEffect, useCallback } from 'react'
+
 import GameStack from './components/GameStack'
 import Deck from './components/Deck'
 import Turned from './components/Turned'
-import lodash from 'lodash'
 import SuitStack from './components/SuitStack'
-import createDeck from './utilities/createDeck'
-import './App.css'
-import { DndContext } from '@dnd-kit/core'
-import validate from './utilities/validate'
 import GameBar from './components/GameBar'
+import VictoryModal from './components/VictoryModal'
+
+import createDeck from './utilities/createDeck'
+import validate from './utilities/validate'
+import formatToDoubleDigits from './utilities/formatToDoubleDigits'
 
 const App = () => {
   const initialDeck = lodash.shuffle(createDeck())
@@ -28,22 +32,58 @@ const App = () => {
 
   const [history, setHistory] = useState({
     count: 0,
-    cardsState: []
+    state: []
   })
 
+  const [score, setScore] = useState(0)
+
+  const [seconds, setSeconds] = useState(0)
+  const [timer, setTimer] = useState('00:00')
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  
   const layoutStyle = {
+    marginTop: '2%',
     display: 'grid',
     gridTemplateColumns: '14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2%'
+  }
+
+  const modifyScore = (value) => {
+    setScore(Math.max(score + value, 0))
+  }
+
+  const createNewGame = () => {
+    const newDeck = lodash.shuffle(createDeck())
+    setDeckStack(newDeck.slice(28, newDeck.length))
+    setTurnedStack([])
+    setSuitStacks({ A: [], B: [], C: [], D: [] })
+    setGameStacks({
+      G0: { cards: newDeck.slice(0, 1), hiddenCount: 0 },
+      G1: { cards: newDeck.slice(1, 3), hiddenCount: 1 },
+      G2: { cards: newDeck.slice(3, 6), hiddenCount: 2 },
+      G3: { cards: newDeck.slice(6, 10), hiddenCount: 3 },
+      G4: { cards: newDeck.slice(10, 15), hiddenCount: 4 },
+      G5: { cards: newDeck.slice(15, 21), hiddenCount: 5 },
+      G6: { cards: newDeck.slice(21, 28), hiddenCount: 6 }
+    })
+    setHistory({
+      count: 0,
+      state: []
+    })
+    setScore(0)
+    setSeconds(0)
+    setIsModalOpen(false)
   }
 
   const saveHistoryState = () => {
     setHistory({
       ...history, count: history.count + 1,
-      cardsState: history.cardsState.concat({
+      state: history.state.concat({
         deck: deckStack,
         turned: turnedStack,
         suit: suitStacks,
-        game: gameStacks
+        game: gameStacks,
+        score: score
       })
     })
   }
@@ -63,6 +103,7 @@ const App = () => {
   const resetDeck = () => {
     setDeckStack(turnedStack)
     setTurnedStack([])
+    modifyScore(-50)
   }
 
   const addToSuitStack = (suitStack, card) => {
@@ -80,7 +121,6 @@ const App = () => {
   }
 
   const addToGameStack = (gameStack, cards) => {
-    console.log(gameStack, cards)
     setGameStacks(prevState => ({
       ...prevState,
       [gameStack]: {
@@ -134,6 +174,23 @@ const App = () => {
     }
   }
 
+  const calculateMoveScore = (fromStackId, toStackId) => {
+    if (fromStackId === 'turnedStack') {
+      if (toStackId in suitStacks) {
+        modifyScore(10)
+      }
+      if (toStackId in gameStacks) {
+        modifyScore(5)
+      }
+    }
+    if (fromStackId in suitStacks && !(toStackId in suitStacks)) {
+      modifyScore(-15)
+    }
+    if (fromStackId in gameStacks && toStackId in suitStacks) {
+      modifyScore(10)
+    }
+  }
+
   const handleDragEnd = (event) => {
     if (event.over) {
       let fromStackId = event.active.data.current.from
@@ -144,19 +201,21 @@ const App = () => {
       }
       if (isValidMove(toStackId, cards)) {
         executeMove(fromStackId, toStackId, cards)
+        calculateMoveScore(fromStackId, toStackId)
         saveHistoryState()
       }
     }
   }
 
   const handleUndo = () => {
-    const copyCardsStateHistory = [...history.cardsState]
-    const applyHistory = copyCardsStateHistory.pop()
+    const copyHistoryState = [...history.state]
+    const applyHistory = copyHistoryState.pop()
     setDeckStack(applyHistory.deck)
     setTurnedStack(applyHistory.turned)
     setSuitStacks(applyHistory.suit)
     setGameStacks(applyHistory.game)
-    setHistory({ count: history.count - 1, cardsState: copyCardsStateHistory })
+    setScore(applyHistory.score)
+    setHistory({ count: history.count - 1, state: copyHistoryState })
   }
 
   const updateHiddenCount = (gameStack) => {
@@ -168,30 +227,68 @@ const App = () => {
         hiddenCount: prevState[gameStack].hiddenCount = newCount
       }
     }))
+    modifyScore(10)
   }
 
+  const updateTimer = useCallback(() => {
+    const minutes = Math.floor(seconds / 60)
+    const secondsLeft = seconds % 60
+    setTimer(`${formatToDoubleDigits(minutes)}:${formatToDoubleDigits(secondsLeft)}`)
+  }, [seconds])
+
+  useEffect(() => {
+    if (seconds > 3600) {
+      return
+    }
+
+    updateTimer()
+
+    const interval = setInterval(() => {
+      setSeconds((prevSeconds) => {
+        if (isModalOpen) {
+          clearInterval(interval)
+          return prevSeconds
+        }
+        return prevSeconds + 1
+      })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [seconds, updateTimer, isModalOpen])
+  
+  const confirmVictory = useCallback(() => {
+    if (Object.values(suitStacks).every(stack => stack.length === 13)) {
+      setIsModalOpen(true)
+    }
+  }, [suitStacks])
+
+  useEffect(() => {
+    confirmVictory()
+  }, [confirmVictory, setSuitStacks])
+
   return (
-    <div id='game'>
-      <GameBar count={history.count} handleUndo={handleUndo} />
-      <main>
-        <DndContext onDragEnd={handleDragEnd}>
-          <div style={layoutStyle}>
-            <Deck turnCard={turnCard} resetDeck={resetDeck} cards={deckStack} />
-            <Turned id='turnedStack' cards={turnedStack} />
-            <div></div>
-            {Object.keys(suitStacks).map((stack) => (
-              <SuitStack key={stack} id={stack} cards={suitStacks[stack]} />
-            ))}
-          </div>
-          <br></br>
-          <div style={layoutStyle}>
-            {Object.keys(gameStacks).map((stack) => (
-              <GameStack key={stack} id={stack} cards={gameStacks[stack].cards} hiddenCount={gameStacks[stack].hiddenCount} updateHiddenCount={updateHiddenCount} />
-            ))}
-          </div>
-        </DndContext>
-      </main>
-    </div>
+    <>
+      <VictoryModal isOpen={isModalOpen} createNewGame={createNewGame} score={score} seconds={seconds} timer={timer} />
+      <div id='game'>
+        <GameBar count={history.count} handleUndo={handleUndo} createNewGame={createNewGame} score={score.toString()} timer={timer} />
+        <main>
+          <DndContext onDragEnd={handleDragEnd} autoScroll={{ acceleration: 0 }}>
+            <div style={layoutStyle}>
+              <Deck turnCard={turnCard} resetDeck={resetDeck} cards={deckStack} />
+              <Turned id='turnedStack' cards={turnedStack} />
+              <div></div>
+              {Object.keys(suitStacks).map((stack) => (
+                <SuitStack key={stack} id={stack} cards={suitStacks[stack]} />
+              ))}
+            </div>
+            <div style={layoutStyle}>
+              {Object.keys(gameStacks).map((stack) => (
+                <GameStack key={stack} id={stack} cards={gameStacks[stack].cards} hiddenCount={gameStacks[stack].hiddenCount} updateHiddenCount={updateHiddenCount} />
+              ))}
+            </div>
+          </DndContext>
+        </main>
+      </div>
+    </>
   )
 }
 

@@ -10,7 +10,7 @@ const CardCover = ({ blank = false }) => {
     return (
       <div style={cardCoverStyle}>
         <svg viewBox='0 0 100 150'>
-          <rect width='100%' height='100%' fill='#358a13' display='block' stroke='black' strokeWidth='5%' />
+          <rect width='100%' height='100%' fillOpacity='0.2' display='block' stroke='black' strokeWidth='5%' />
         </svg>
       </div >
     )
